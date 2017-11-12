@@ -12,14 +12,14 @@ def save_obj(obj, name ):
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-def ids_to_phrases(idx_list, id_to_word):
+def ids_to_phrases(idx_list, id_to_word, stop_IDs=[0,3]):
     # Takes list of word ids and returns a string of words
     # Mainly for use in analysis
     phrase = u''
     i=0
     if len(idx_list)>0:
         "We want to ignore <EOS> unless it's the first element"
-        while len(idx_list)>i and (i>=0) and (idx_list[i] not in (1,0)):
+        while len(idx_list)>i and (i>=0) and (idx_list[i] not in stop_IDs):
             phrase+= id_to_word[idx_list[i]]+u' '
             i+=1
     return phrase.encode("utf-8")
@@ -66,6 +66,7 @@ def format_idx(idx):
 from scipy.stats import mode
 
 def sequence_stats(text):
+    print "***  SEQUENCE STATS ***"
     lengths = sorted([len(seq) for seq in text])
     l_min = np.min(lengths)
     l_max = np.max(lengths)
